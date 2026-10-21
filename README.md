@@ -97,4 +97,4 @@ Historical research notes, private replay-dependent tests/browser fixtures and t
 
 `data/`, personal settings, replays, journals, annotations, screenshots, research, dependencies, secrets and build outputs are excluded from Git. Keep each user's installation and private data separate. Don't force-add ignored files.
 
-**This is a local development repository, not a cleared public release.** The inherited viewer root has no identified project license; bundled dependencies have separate terms. No blanket license is asserted. Review **[sharing and third-party notices](SHARING.md)** before distributing or publishing it. A local Git commit does not upload anything.
+**This is a private development repository, not a cleared public release.** The inherited viewer root has no identified project license; bundled dependencies have separate terms. No blanket license is asserted. Review **[sharing and third-party notices](SHARING.md)** before distributing or publishing it. A local Git commit does not upload anything.
