@@ -1,0 +1,3 @@
+# Upstream open PR #147 adds save 67.2+ header support needed by these replays.
+# Pin the reviewed PR commit until merged/released; this is the normal mgz package.
+mgz @ git+https://github.com/happyleavesaoc/aoc-mgz.git@def94dd63a23b65435813e5acc8a0b3defafda03

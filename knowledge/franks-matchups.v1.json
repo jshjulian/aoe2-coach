@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "pack_version": 1,
+  "id": "franks-matchups",
+  "reviewed_on": "2026-10-15",
+  "source_commit": "3bb43b1439eef88dfe7fe892d7f7dc41ac9dd76f",
+  "declared_update": 185872,
+  "edition": "DE",
+  "dataset_id": 100,
+  "opponents": ["Bohemians", "Britons", "Berbers"],
+  "notice": "Curated reference facts and conditional review questions, not an executable bonus or combat model. No proprietary artwork or .dat is bundled.",
+  "facts": [
+    {
+      "id": "franks-no-bloodlines", "civilization": "Franks", "minimum_age": 2,
+      "text": "Franks do not have Bloodlines in this reference tree. It is not a missing-upgrade practice target.",
+      "checks": [{"kind": "Tech", "id": 435, "available": false, "age": 2, "name": "Bloodlines"}]
+    },
+    {
+      "id": "franks-free-mill", "civilization": "Franks", "minimum_age": 2,
+      "text": "Frank Mill technologies are free at their respective ages in this reference. Missing Horse Collar, Heavy Plow or Crop Rotation research commands are not evidence of a mistake or proof of the final upgrade state.",
+      "description_excerpt": "Mill technologies free",
+      "checks": [{"kind": "Tech", "id": 14, "available": true, "age": 2, "name": "Horse Collar"}, {"kind": "Tech", "id": 13, "available": true, "age": 3, "name": "Heavy Plow"}, {"kind": "Tech", "id": 12, "available": true, "age": 4, "name": "Crop Rotation"}]
+    },
+    {
+      "id": "franks-mounted-hp", "civilization": "Franks", "minimum_age": 2,
+      "text": "The reference describes a Frank mounted-unit HP bonus starting in Feudal Age. This tool does not calculate effective HP, survivability or fight results.",
+      "description_excerpt": "Mounted Units +20% HP starting in Feudal Age", "checks": []
+    },
+    {
+      "id": "bohemians-spear-bonus", "civilization": "Bohemians", "minimum_age": 2,
+      "text": "The reference gives the Bohemian Spearman line +25% bonus damage. This is a capability, not an observed army or a prediction of a cavalry engagement.",
+      "description_excerpt": "Spearman-line deals +25% bonus damage",
+      "checks": [{"kind": "Unit", "id": 93, "available": true, "age": 2, "name": "Spearman"}, {"kind": "Unit", "id": 358, "available": true, "age": 3, "name": "Pikeman"}, {"kind": "Unit", "id": 359, "available": true, "age": 4, "name": "Halberdier"}]
+    },
+    {
+      "id": "bohemians-castle-gunpowder", "civilization": "Bohemians", "minimum_age": 3,
+      "text": "Bohemian Chemistry and Hand Cannoneer availability starts in Castle Age in this reference, unlike the generic Imperial-age expectation. Neither availability nor a research/queue command confirms completed gunpowder production.",
+      "description_excerpt": "Chemistry and Hand Cannoneer available in Castle Age",
+      "checks": [{"kind": "Tech", "id": 47, "available": true, "age": 3, "name": "Chemistry"}, {"kind": "Unit", "id": 5, "available": true, "age": 3, "name": "Hand Cannoneer"}]
+    },
+    {
+      "id": "britons-foot-archer-range", "civilization": "Britons", "minimum_age": 3,
+      "text": "The reference gives Briton foot Archers +1/+2 range in Castle/Imperial Age. Actual range still depends on unit type and upgrades; it is not reconstructed from civilization alone.",
+      "description_excerpt": "Foot Archers +1/+2 range in Castle/Imperial Age",
+      "checks": [{"kind": "Unit", "id": 4, "available": true, "age": 2, "name": "Archer"}, {"kind": "Unit", "id": 24, "available": true, "age": 3, "name": "Crossbowman"}]
+    },
+    {
+      "id": "berbers-stable-discount", "civilization": "Berbers", "minimum_age": 3,
+      "text": "The reference discounts Berber Stable units by 15/20% in Castle/Imperial Age. Queue commands cannot establish spending, completed reinforcement counts or an equal-resource comparison.",
+      "description_excerpt": "Stable Units cost -15/20% in Castle/Imperial Age",
+      "checks": [{"kind": "Building", "id": 101, "available": true, "age": 2, "name": "Stable"}, {"kind": "Unit", "id": 38, "available": true, "age": 3, "name": "Knight"}, {"kind": "Unit", "id": 329, "available": true, "age": 3, "name": "Camel Rider"}]
+    }
+  ],
+  "options": [
+    {"id": "archer", "label": "Archer support", "kind": "Unit", "entity_id": 4, "age": 2, "building_id": 87, "requires": "Completed Archery Range; resources and relevant upgrades must be checked."},
+    {"id": "skirmisher", "label": "Skirmisher support", "kind": "Unit", "entity_id": 7, "age": 2, "building_id": 87, "requires": "Completed Archery Range; resources, composition and upgrades must be checked."},
+    {"id": "elite-skirmisher", "label": "Elite Skirmisher upgrade/support", "kind": "Unit", "entity_id": 6, "age": 3, "building_id": 87, "requires": "Completed Archery Range and required upgrade; the tree does not establish completed research or resources."},
+    {"id": "pikeman", "label": "Pikeman upgrade/support", "kind": "Unit", "entity_id": 358, "age": 3, "building_id": 12, "requires": "Completed Barracks and required upgrade; resources and opponent composition must be checked."},
+    {"id": "scorpion", "label": "Scorpion support", "kind": "Unit", "entity_id": 279, "age": 3, "building_id": 49, "requires": "Completed Siege Workshop, resources, positioning and protection must be checked."}
+  ],
+  "rules": [
+    {
+      "id": "franks-bohemians-spear-review", "opponent": "Bohemians", "minimum_opponent_age": 2,
+      "opponent_units": [93, 358, 359], "fact_ids": ["bohemians-spear-bonus"], "option_ids": ["archer", "scorpion"],
+      "title": "Review the spear-line scouting question before further Knight commitments",
+      "interpretation": "Nearby spear-line and Knight queue commands make composition worth reviewing; they do not show the resulting armies or an engagement.",
+      "action": "If spear-line units were actually scouted, review whether available ranged support, separating the armies, or attacking elsewhere was practical before continuing the same cavalry commitment.",
+      "alternatives": ["Keep mobile cavalry away from spear concentrations and look for another target.", "Support may already have been planned or present; these commands do not resolve the live army.", "Defensive adaptation, resources, map access and information available in-game may change the choice."]
+    },
+    {
+      "id": "franks-britons-archer-review", "opponent": "Britons", "minimum_opponent_age": 3,
+      "opponent_units": [4, 24, 492, 8, 530], "fact_ids": ["britons-foot-archer-range"], "option_ids": ["skirmisher", "elite-skirmisher", "scorpion"],
+      "title": "Review the Castle-age ranged-pressure scouting question",
+      "interpretation": "Archer-line queue commands after a recorded Castle milestone create a review question, not evidence that a ranged army was fielded or could not be reached.",
+      "action": "If a ranged army was scouted, compare a safe engagement or disengagement with available ranged/siege support. Check upgrades, terrain, protection and resources rather than assuming cavalry can always close the distance.",
+      "alternatives": ["Use mobility to avoid the concentration and threaten elsewhere if safe.", "Existing support, a small enemy group or favorable terrain may make additional production unnecessary.", "The replay reveals commands retrospectively; the player may not have known them in-game."]
+    },
+    {
+      "id": "franks-berbers-stable-review", "opponent": "Berbers", "minimum_opponent_age": 3,
+      "opponent_units": [38, 283, 329, 330, 448, 546, 441], "fact_ids": ["berbers-stable-discount"], "option_ids": ["pikeman"],
+      "title": "Review reinforcement assumptions against Berber Stable commands",
+      "interpretation": "Stable-unit and Knight queue commands make reinforcement/composition assumptions worth checking. The reference discount does not establish either player's spending or produced army size.",
+      "action": "If those units were actually scouted, review reinforcement routes and composition before assuming matching queue activity means equal investment. Consider available spear-line support where appropriate, or avoid the reinforcement stream.",
+      "alternatives": ["Camel, Knight and light-cavalry compositions require different decisions; a generic discount does not identify the best response.", "Keep mobility and choose another target if extra support is impractical.", "Resources, completed upgrades, live numbers and tactical outcomes are unresolved."]
+    }
+  ]
+}

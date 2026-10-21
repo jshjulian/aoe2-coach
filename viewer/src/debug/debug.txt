@@ -1,0 +1,101 @@
+// find first
+__aoe2rec.operations.find((item) => {
+    if (item.Action && item.Action.action_data && item.Action.action_data.Build) {
+        return true;
+    }
+});
+
+// find all
+__aoe2rec.operations.filter((item) => {
+    if (item.Action && item.Action.action_data && item.Action.action_data.DeQueue) {
+        return true;
+    }
+});
+
+// find all by player
+__aoe2rec.operations.filter((item) => {
+    if (item.Action && item.Action.action_data && item.Action.action_data.DeQueue
+        && item.Action.action_data[Object.keys(item.Action.action_data)[0]].player_id === 1) {
+        return true;
+    }
+});
+
+// count actions for one player
+let actionCounts = {};
+__aoe2rec.operations.forEach((item) => {
+    const actionData = item.Action?.action_data;
+    if (actionData) {
+        const actionType = Object.keys(actionData)[0];
+        if (actionData[actionType]?.player_id === 1) {
+            actionCounts[actionType] = (actionCounts[actionType] || 0) + 1;
+        }
+    }
+});
+console.table(actionCounts);
+
+// count actions by player
+let playerActionStats = {};
+__aoe2rec.operations.forEach((item) => {
+    const actionData = item.Action?.action_data;
+    if (actionData) {
+        const actionType = Object.keys(actionData)[0];
+        const playerId = actionData[actionType]?.player_id;
+        if (playerId !== undefined) {
+            if (!playerActionStats[playerId]) {
+                playerActionStats[playerId] = {};
+            }
+            playerActionStats[playerId][actionType] = (playerActionStats[playerId][actionType] || 0) + 1;
+        }
+    }
+});
+console.table(playerActionStats);
+
+// find all unhandled
+__aoe2rec.operations.filter((item) => {
+    if (item.Action && item.Action.action_data && (
+        !item.Action.action_data.Transform
+        && !item.Action.action_data.Game
+        && !item.Action.action_data.Resign
+        && !item.Action.action_data.Flare
+        && !item.Action.action_data.Interact
+        && !item.Action.action_data.Order
+
+        && !item.Action.action_data.Move
+        && !item.Action.action_data.DeAttackMove
+        && !item.Action.action_data.Patrol
+        && !item.Action.action_data.Follow
+        && !item.Action.action_data.AttackGround
+
+        && !item.Action.action_data.Stop
+        && !item.Action.action_data.Stance
+        && !item.Action.action_data.Formation
+        && !item.Action.action_data.Autoscout
+
+        && !item.Action.action_data.Gatherpoint
+        && !item.Action.action_data.BackToWork
+        && !item.Action.action_data.Release
+
+        && !item.Action.action_data.Build
+        && !item.Action.action_data.Wall
+        && !item.Action.action_data.Repair
+        && !item.Action.action_data.Delete
+
+        && !item.Action.action_data.DeQueue
+
+        && !item.Action.action_data.Sell
+        && !item.Action.action_data.Buy
+
+        && !item.Action.action_data.Research
+
+        && !item.Action.action_data.DeUnknown35
+        && !item.Action.action_data.DeUnknown37
+        && !item.Action.action_data.DeUnknown130
+        && !item.Action.action_data.Unknown45
+
+        && !item.Action.action_data.AiMove
+        && !item.Action.action_data.AiInteract
+        && !item.Action.action_data.AiQueue
+    )) {
+        return true;
+    }
+});

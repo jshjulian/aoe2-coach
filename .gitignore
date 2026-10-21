@@ -1,0 +1,48 @@
+# All personal/runtime material stays local (including future data subdirectories).
+/data/
+/agewise.local.json
+/agewise.*.local.json
+.env*
+**/.env*
+.npmrc
+**/.npmrc
+.pypirc
+.netrc
+.ssh/
+*.dump
+*.aoe2record
+*.mgz
+*.zip
+*.sqlite*
+*.db
+*.pem
+*.key
+*.pfx
+*.p12
+*.log
+
+# Dependencies, caches and build products.
+.venv/
+__pycache__/
+*.py[cod]
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.DS_Store
+
+# Historical local research notes and replay-specific regression fixtures are
+# deliberately not part of the initial source snapshot. They remain on disk.
+/docs/*
+!/docs/setup.md
+/test_*.py
+!/test_replay_settings.py
+!/test_map_previews.py
+!/test_reference_snapshot.py
+/tools/browser*.mjs
+/tools/run_*_browser_smoke.py
+/tools/build_review_package.py
+/tools/review_reasoning_cases.py
+/viewer/LOCAL-INTEGRATION.md
+/viewer/.github/

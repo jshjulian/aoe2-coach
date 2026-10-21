@@ -1,0 +1,119 @@
+/* Agewise field-notes identity. Local system fonts and CSS artwork only. */
+html:root {
+  --background: #0c1523;
+  --foreground: #eef2f6;
+  --panel: #142033;
+  --panel-strong: #1b2b40;
+  --panel-dark: #0d192a;
+  --accent: #efbd76;
+  --accent-2: #83cdc4;
+  --training-accent: #94dbcd;
+  --training-wash: rgba(106, 194, 176, .085);
+  --muted: #a4b4c8;
+  --border-subtle: rgba(176, 195, 217, .18);
+  --btn-border: rgba(176, 195, 217, .23);
+  --focus-ring: #efbd76;
+  --studio-shadow: 0 12px 36px rgba(0, 0, 0, .18);
+  --studio-glow: rgba(224, 169, 91, .09);
+  --studio-on-accent: #211b13;
+  background-color: var(--background);
+  background-image: radial-gradient(ellipse at 12% 0%, rgba(51, 99, 125, .26), transparent 55%), radial-gradient(ellipse at 100% 30%, rgba(74, 137, 122, .08), transparent 45%);
+  background-attachment: fixed;
+}
+html:root.light {
+  --background: #f3efe6;
+  --foreground: #1a2b3d;
+  --panel: #fffdf7;
+  --panel-strong: #eee8dc;
+  --panel-dark: #faf6ed;
+  --accent: #8b5619;
+  --accent-2: #216f68;
+  --training-accent: #17685e;
+  --training-wash: rgba(36, 130, 111, .06);
+  --muted: #57677a;
+  --border-subtle: rgba(41, 61, 76, .18);
+  --btn-border: rgba(41, 61, 76, .22);
+  --focus-ring: #8b5619;
+  --studio-shadow: 0 10px 30px rgba(60, 50, 30, .055);
+  --studio-glow: rgba(171, 111, 38, .07);
+  --studio-on-accent: #fffaf0;
+  background-color: var(--background);
+  background-image: radial-gradient(ellipse at 8% 0%, rgba(198, 161, 99, .14), transparent 55%), radial-gradient(ellipse at 100% 30%, rgba(64, 137, 123, .06), transparent 45%);
+}
+@media (prefers-color-scheme: light) {
+  html:root:not(.dark) {
+    --background: #f3efe6; --foreground: #1a2b3d; --panel: #fffdf7;
+    --panel-strong: #eee8dc; --panel-dark: #faf6ed; --accent: #8b5619;
+    --accent-2: #216f68; --training-accent: #17685e;
+    --training-wash: rgba(36, 130, 111, .06); --muted: #57677a;
+    --border-subtle: rgba(41, 61, 76, .18); --btn-border: rgba(41, 61, 76, .22);
+    --focus-ring: #8b5619; --studio-shadow: 0 10px 30px rgba(60, 50, 30, .055);
+    --studio-glow: rgba(171, 111, 38, .07); --studio-on-accent: #fffaf0;
+    background-color: var(--background);
+    background-image: radial-gradient(ellipse at 8% 0%, rgba(198, 161, 99, .14), transparent 55%), radial-gradient(ellipse at 100% 30%, rgba(64, 137, 123, .06), transparent 45%);
+  }
+}
+.agewise-app { min-width: 0; }
+.agewise-header { border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; }
+.agewise-brand { display: flex; align-items: center; gap: .9rem; }
+.agewise-mark { width: 3.3rem; height: 3.3rem; flex-shrink: 0; color: var(--accent); }
+.agewise-app .agewise-wordmark { font-family: var(--font-display); font-variant-caps: normal; letter-spacing: -.035em; line-height: 1; }
+.agewise-brand-note { display: flex; align-items: center; gap: .4rem; color: var(--muted); font-size: .62rem; text-transform: uppercase; letter-spacing: .18em; margin-bottom: .45rem; }
+.agewise-brand-note::before { content: ''; width: .35rem; height: .35rem; background: var(--training-accent); border-radius: 50%; }
+.agewise-app header > div > div:last-child > div > label,
+.agewise-app header > div > div:last-child > div > button { box-shadow: none; }
+.agewise-app nav[aria-label="Agewise views"] { gap: .25rem; border: 1px solid var(--border-subtle); border-radius: .85rem; padding: .3rem; background: var(--panel-dark); }
+.agewise-app nav[aria-label="Agewise views"] > button { flex: 1; border: 0; border-radius: .55rem; padding: .65rem 1rem; letter-spacing: .09em; font-size: .72rem; }
+.agewise-app nav[aria-label="Agewise views"] > button[data-active="true"] { color: var(--studio-on-accent); background: var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+.agewise-app .replay-library { background: var(--panel-dark); border-color: var(--border-subtle); box-shadow: var(--studio-shadow); }
+.agewise-app .replay-library h2 { color: var(--foreground); font-family: var(--font-display); font-variant-caps: normal; font-size: 1.65rem; }
+.replay-library .library-count { border-color: var(--accent); color: var(--accent); }
+.replay-library button[data-selected] { border-left: 3px solid transparent; }
+.replay-library button[data-selected="true"] { background: linear-gradient(90deg, var(--studio-glow), transparent); border-left-color: var(--accent); box-shadow: none; }
+.replay-library button[data-selected="false"]:hover { background: var(--panel); }
+.library-mobile-toggle { display: none; }
+.agewise-app .match-overview { background: linear-gradient(115deg, var(--studio-glow), transparent 62%), var(--panel); border-color: var(--border-subtle); border-left: 3px solid var(--accent); }
+.match-overview h1 { letter-spacing: -.025em; }
+.agewise-app .studio-review { background: var(--panel); border-color: var(--border-subtle); box-shadow: var(--studio-shadow); position: relative; }
+.studio-section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem 1rem; padding-bottom: .85rem; margin-bottom: .85rem; border-bottom: 1px solid var(--border-subtle); color: var(--muted); font-size: .62rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.studio-section-heading > span:first-child { color: var(--accent); }
+.studio-review h2 { color: var(--foreground); }
+.studio-review .studio-review-title { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.65rem, 2.5vw, 2.45rem); line-height: 1.12; letter-spacing: -.025em; }
+.decision-window { color: var(--accent); display: inline-flex; border: 1px solid var(--border-subtle); border-radius: 999px; padding: .3rem .65rem; font-variant-numeric: tabular-nums; background: var(--studio-glow); }
+.studio-review .takeaway-title { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.3rem, 1.75vw, 1.7rem); line-height: 1.2; letter-spacing: -.015em; }
+.studio-review .lesson-card { background: var(--panel-dark); border: 1px solid var(--border-subtle); border-top: 3px solid var(--accent); }
+.lesson-card > p:first-child { color: var(--accent); }
+.studio-eyebrow { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .13em; color: var(--training-accent); }
+.agewise-app .studio-primary { background: var(--accent); color: var(--studio-on-accent); border-color: var(--accent); font-weight: 700; }
+.agewise-app .studio-primary:hover:not(:disabled) { filter: brightness(1.08); box-shadow: 0 4px 12px var(--studio-glow); }
+.agewise-app .studio-secondary { border-color: var(--training-accent); color: var(--training-accent); background: var(--training-wash); }
+.agewise-app .training-shortcut { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; background: var(--training-wash); border: 1px solid var(--border-subtle); border-left: 3px solid var(--training-accent); }
+.agewise-app .training-strip { border-color: var(--border-subtle); background: linear-gradient(115deg, var(--training-wash), transparent), var(--panel-dark); }
+.training-strip .studio-section-heading > span:first-child { color: var(--training-accent); }
+.training-strip .training-title { font-family: var(--font-display); color: var(--foreground); font-size: 1.45rem; font-weight: 500; letter-spacing: -.02em; }
+.agewise-app .training-workspace { background: var(--panel-dark); border-color: var(--border-subtle); }
+.training-plan-card { background: var(--training-wash); }
+.training-plan-card h2 { color: var(--foreground); }
+.practice-chooser { background: var(--training-wash); border: 1px solid var(--training-accent); }
+.agewise-app button:not(:disabled), .agewise-app summary, .agewise-app input[type="checkbox"], .agewise-app select { cursor: pointer; }
+.agewise-app button { transition: background-color .16s ease, border-color .16s ease, box-shadow .16s ease; }
+.agewise-app input[type="checkbox"] { accent-color: var(--training-accent); }
+.agewise-app details > summary { line-height: 1.5; }
+.agewise-app [data-gameplay-topics] { border: 1px solid var(--border-subtle); border-radius: .6rem; padding: .65rem .8rem; background: var(--panel-dark); }
+@media (max-width: 1279px) {
+  .library-mobile-toggle { display: block; width: 100%; margin-top: .7rem; border: 1px solid var(--border-subtle); border-radius: .5rem; padding: .5rem; font-size: .75rem; font-weight: 600; color: var(--accent); }
+  .replay-library[data-browse="false"] .library-list,
+  .replay-library[data-browse="false"] .library-tools { display: none; }
+  .replay-library .library-list { max-height: 45vh; }
+}
+@media (max-width: 600px) {
+  .agewise-header { gap: .75rem; }
+  .agewise-mark { width: 2.6rem; height: 2.6rem; }
+  .agewise-brand { gap: .65rem; }
+  .agewise-app .studio-section-heading { font-size: .58rem; letter-spacing: .08em; }
+  .studio-review .studio-review-title { font-size: 1.9rem; }
+  .agewise-app nav[aria-label="Agewise views"] > button { padding-inline: .7rem; }
+  .training-strip > div:nth-child(2) > div:last-child { width: 100%; }
+  .training-strip > div:nth-child(2) > div:last-child > button { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: reduce) { .agewise-app :is(button, input, select, textarea, label) { transition: none; } }

@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "replay_directories": [
+    "/path/to/your/savegame"
+  ]
+}

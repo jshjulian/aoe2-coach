@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "pack_id": "situational-composition",
+  "pack_version": 1,
+  "edition": "DE",
+  "dataset_id": 100,
+  "declared_update": 185872,
+  "source_commit": "3bb43b1439eef88dfe7fe892d7f7dc41ac9dd76f",
+  "authorship": "Agewise authored conditional strategy; catalog facts separately hash-verified. Not independent strategic qualification.",
+  "scope": "Feudal 1v1 basic-unit role transitions; no live composition or battle reconstruction.",
+  "civilization_aliases": {"Maya":"Mayans"},
+  "roles": [
+    {"id":"infantry","name":"melee infantry","unit_ids":[74,75],"names":["Militia","Man-at-Arms"],"preferred_against":[],"purpose":"Apply close-range pressure; infantry investment alone does not establish a local attack.","exceptions":"Militia and Men-at-Arms are not interchangeable in strength. Upgrade requests are not completion, and available numbers, armor and support remain unknown."},
+    {"id":"spear","name":"anti-cavalry infantry","unit_ids":[93],"names":["Spearman"],"preferred_against":["cavalry"],"purpose":"Support a force against cavalry; do not treat Spearmen as a general melee-infantry answer.","exceptions":"Spearmen can be vulnerable to ranged fire and need protection. A spear queue does not establish a concentration at the fight."},
+    {"id":"cavalry","name":"mobile cavalry","unit_ids":[448],"names":["Scout Cavalry"],"preferred_against":["skirmisher"],"purpose":"Mobility, raids and contesting exposed ranged units/builders when the local fight is favorable.","exceptions":"Scouts can contest isolated infantry or builders with sufficient support, but accompanying Spearmen, terrain, numbers and upgrades can reverse the choice."},
+    {"id":"archer","name":"ranged damage","unit_ids":[4],"names":["Archer"],"preferred_against":["infantry","spear"],"purpose":"Use ranged damage against basic melee infantry while protected or moving away between shots.","exceptions":"A lone Archer is vulnerable. Enemy Skirmishers, cavalry, towers, poor positioning, armor and denied gold can reverse this alternative. Not an all-infantry counter rule."},
+    {"id":"skirmisher","name":"anti-ranged support","unit_ids":[7],"names":["Skirmisher"],"preferred_against":["archer","spear"],"purpose":"Help against Archers and Spearmen; this does not make Skirmishers a strong answer to accompanying Men-at-Arms.","exceptions":"Low damage against Men-at-Arms and a minimum range make close infantry pressure difficult. Mixed threats may justify Skirmishers alongside another damage source. Denied gold can explain a temporary food/wood-funded choice."}
+  ],
+  "research_roles": [{"name":"Man-at-Arms","technology_id":222,"role":"infantry"}],
+  "practice": "Before changing unit role, name the threat you actually saw and the job of the next unit. Keep a damage source for the remaining threats; if funding or access is unsafe, protect workers and regroup first.",
+  "practice_title": "Match the unit switch to the threat you saw",
+  "position_alternative": "If the required units cannot be funded or safely positioned, protect exposed workers, use short walls or existing defensive cover where they actually help, and seek safe resource access before forcing the composition change.",
+  "position_exceptions": "No wall closure, safe second gold, completed tower, available route or successful relocation is established by these commands. Contest builders only if the actual local force and escape route permit it; do not dive a defended completed tower.",
+  "sources": [
+    {"id":"catalog","kind":"maintained_catalog","url":"https://github.com/SiegeEngineers/aoe2techtree/tree/3bb43b1439eef88dfe7fe892d7f7dc41ac9dd76f","scope":"Hash-pinned availability, ages, production requirements, base costs and civilization description; not live effective statistics."},
+    {"id":"strategy","kind":"authored_conditional_interpretation","url":null,"scope":"Role relationships, composition tradeoffs and defensive alternatives above require strategic review; the catalog does not independently prove tactical advice."}
+  ]
+}

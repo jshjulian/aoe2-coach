@@ -1,0 +1,468 @@
+import React from "react";
+
+const formatClock = (seconds: number) => {
+  const total = Math.max(seconds, 0);
+  const mins = Math.floor(total / 60);
+  const secs = Math.floor(total % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+};
+
+const AGE_LABELS: Record<string, string> = {
+  Feudal: "II",
+  Castle: "III",
+  Imperial: "IV",
+};
+
+export interface TimeSeriesPointData {
+  minute: number;
+  value?: number;
+  apm?: number;
+}
+
+export interface TimeSeriesChartProps {
+  data: { playerId: number; history: TimeSeriesPointData[] }[];
+  players: { id: number; name?: string;[key: string]: unknown }[];
+  getPlayerColor: (id?: number) => string;
+  selectedTime?: number;
+  ageTimings?: { playerId: number; timings: Record<string, number>; textColor?: string }[];
+  isLogScale?: boolean;
+  formatYTick?: (val: number) => string;
+  minYMax?: number;
+  maxMinute?: number;
+}
+
+const getPointVal = (p: TimeSeriesPointData): number => {
+  if (typeof p.value === "number") return p.value;
+  if (typeof p.apm === "number") return p.apm;
+  return 0;
+};
+
+export function TimeSeriesChart({
+  data,
+  players,
+  getPlayerColor,
+  selectedTime,
+  ageTimings,
+  isLogScale = false,
+  formatYTick,
+  minYMax = 50,
+  maxMinute: maxMinuteProp,
+}: TimeSeriesChartProps) {
+  const [hoveredPlayerId, setHoveredPlayerId] = React.useState<number | null>(null);
+
+  const isHoveredPlayerPlotted =
+    hoveredPlayerId !== null &&
+    hoveredPlayerId !== undefined &&
+    data.some((d) => d.playerId === hoveredPlayerId);
+  const allPoints = data.flatMap((d) => d.history);
+  if (allPoints.length === 0) return null;
+
+  const maxMinute =
+    maxMinuteProp !== undefined && maxMinuteProp > 0
+      ? maxMinuteProp
+      : Math.max(...allPoints.map((p) => p.minute), 1);
+  const rawMaxVal = Math.max(...allPoints.map((p) => getPointVal(p)), minYMax);
+
+  const width = 800;
+  const height = 220;
+  const padding = { top: 20, right: 15, bottom: 40, left: 40 };
+
+  const { yAxisMax, yTicks } = React.useMemo(() => {
+    if (!isLogScale) {
+      const steps = [
+        5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000, 20000, 25000, 50000, 100000,
+      ];
+      let chosenStep = steps[steps.length - 1];
+      for (const s of steps) {
+        const intervals = Math.ceil(rawMaxVal / s);
+        if (intervals <= 5 && intervals >= 3) {
+          chosenStep = s;
+          break;
+        }
+      }
+
+      const ceiling = Math.max(Math.ceil(rawMaxVal / chosenStep) * chosenStep, chosenStep * 3);
+      const ticks: number[] = [];
+      for (let v = 0; v <= ceiling; v += chosenStep) {
+        ticks.push(v);
+      }
+      return { yAxisMax: ceiling, yTicks: ticks };
+    }
+
+    // Log scale nice ceiling (10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000...)
+    let ceiling = 10;
+    const exp = Math.floor(Math.log10(rawMaxVal));
+    const base = Math.pow(10, exp);
+    const frac = rawMaxVal / base;
+    if (frac <= 1) {
+      ceiling = base;
+    } else if (frac <= 2) {
+      ceiling = 2 * base;
+    } else if (frac <= 5) {
+      ceiling = 5 * base;
+    } else {
+      ceiling = 10 * base;
+    }
+    ceiling = Math.max(ceiling, 50);
+
+    const logMax = Math.log10(ceiling + 1);
+    const plotHeight = height - padding.top - padding.bottom;
+    const getYForVal = (v: number) => {
+      const ratio = logMax > 0 ? Math.log10(v + 1) / logMax : 0;
+      return height - padding.bottom - ratio * plotHeight;
+    };
+
+    const p10s = [0];
+    for (let e = 1; Math.pow(10, e) < ceiling; e++) {
+      p10s.push(Math.pow(10, e));
+    }
+    p10s.push(ceiling);
+
+    const result: number[] = [];
+    for (let i = 0; i < p10s.length; i++) {
+      const curr = p10s[i];
+      if (result.length > 0) {
+        const prev = result[result.length - 1];
+        const gap = getYForVal(prev) - getYForVal(curr);
+        if (gap > 55) {
+          const mid = prev === 0 ? 5 : 5 * prev;
+          if (mid < curr && getYForVal(prev) - getYForVal(mid) >= 22 && getYForVal(mid) - getYForVal(curr) >= 20) {
+            result.push(mid);
+          }
+        }
+      }
+      if (curr === ceiling || getYForVal(curr) - getYForVal(ceiling) >= 20) {
+        result.push(curr);
+      }
+    }
+    if (!result.includes(ceiling)) result.push(ceiling);
+    return { yAxisMax: ceiling, yTicks: result };
+  }, [isLogScale, rawMaxVal]);
+
+  const getX = (m: number) => padding.left + (m / maxMinute) * (width - padding.left - padding.right);
+  const getY = (a: number) => {
+    const clampedA = Math.max(a, 0);
+    const plotHeight = height - padding.top - padding.bottom;
+    if (isLogScale) {
+      const logMax = Math.log10(yAxisMax + 1);
+      const logVal = Math.log10(clampedA + 1);
+      const ratio = logMax > 0 ? logVal / logMax : 0;
+      return height - padding.bottom - ratio * plotHeight;
+    }
+    return height - padding.bottom - (clampedA / yAxisMax) * plotHeight;
+  };
+
+  // Build a lookup: playerId -> sorted history for interpolation
+  const historyByPlayer = new Map(data.map((d) => [d.playerId, d.history]));
+
+  // The SVG line uses cubic Bézier segments with cp1y=prev.val and cp2y=curr.val,
+  // so y(t) = sy*(1-t)²*(1+2t) + ey*t²*(3-2t)  (cubic Hermite basis).
+  // cp1x=cp2x=midX, so x(t) normalises to the monotone cubic: f(t) = t³ - 1.5t² + 1.5t.
+  // We binary-search t so that f(t) = u (the linear fraction within the segment),
+  // then evaluate the true y on the curve — keeping the dot exactly on the line.
+  const getLineYAtMinute = (playerId: number, targetMinute: number): number => {
+    const history = historyByPlayer.get(playerId);
+    if (!history || history.length === 0) return getY(0);
+
+    for (let i = 0; i < history.length - 1; i++) {
+      const prev = history[i],
+        curr = history[i + 1];
+      if (targetMinute >= prev.minute && targetMinute <= curr.minute) {
+        if (curr.minute === prev.minute) return getY(getPointVal(curr));
+        const u = (targetMinute - prev.minute) / (curr.minute - prev.minute);
+        let lo = 0,
+          hi = 1;
+        for (let iter = 0; iter < 32; iter++) {
+          const t = (lo + hi) / 2;
+          if (t * t * t - 1.5 * t * t + 1.5 * t < u) lo = t;
+          else hi = t;
+        }
+        const t = (lo + hi) / 2;
+        const sy = getY(getPointVal(prev)),
+          ey = getY(getPointVal(curr));
+        return sy * (1 - t) * (1 - t) * (1 + 2 * t) + ey * t * t * (3 - 2 * t);
+      }
+    }
+    if (targetMinute <= history[0].minute) return getY(getPointVal(history[0]));
+    return getY(getPointVal(history[history.length - 1]));
+  };
+
+  const renderedAgeIndicators = (() => {
+    if (!ageTimings) return [];
+    const seenKeys = new Set<string>();
+    const items: { playerId: number; node: React.ReactNode }[] = [];
+
+    ageTimings.forEach((playerAge) => {
+      const color = getPlayerColor(playerAge.playerId);
+      const textColor = playerAge.textColor ?? "white";
+      const isDimmed = isHoveredPlayerPlotted && playerAge.playerId !== hoveredPlayerId;
+
+      Object.entries(playerAge.timings).forEach(([age, timeSeconds]) => {
+        const key = `${playerAge.playerId}-${age}`;
+        if (seenKeys.has(key)) return;
+        seenKeys.add(key);
+
+        const minute = timeSeconds / 60;
+        const x = getX(minute);
+        const label = AGE_LABELS[age] ?? age;
+
+        if (x < padding.left || x > width - padding.right) return;
+
+        const lineY = getLineYAtMinute(playerAge.playerId, minute);
+        const badgeW = 18;
+        const badgeH = 14;
+
+        items.push({
+          playerId: playerAge.playerId,
+          node: (
+            <g
+              key={key}
+              className="select-none pointer-events-none"
+              style={{
+                opacity: isDimmed ? 0 : 1,
+                pointerEvents: "none",
+                userSelect: "none",
+                transition: "opacity 0.1s ease-out",
+              }}
+            >
+              <rect
+                x={x - badgeW / 2}
+                y={lineY - badgeH / 2}
+                width={badgeW}
+                height={badgeH}
+                rx={4}
+                ry={4}
+                fill={color}
+                fillOpacity={0.75}
+              />
+              <text
+                x={x}
+                y={lineY}
+                fill={textColor}
+                fontSize="8"
+                fontWeight="900"
+                fontFamily="serif"
+                textAnchor="middle"
+                dominantBaseline="central"
+                className="font-serif font-black select-none pointer-events-none"
+                style={{ userSelect: "none" }}
+              >
+                {label}
+              </text>
+            </g>
+          ),
+        });
+      });
+    });
+
+    if (isHoveredPlayerPlotted) {
+      items.sort((a, b) => {
+        if (a.playerId === hoveredPlayerId) return 1;
+        if (b.playerId === hoveredPlayerId) return -1;
+        return 0;
+      });
+    }
+
+    return items.map((item) => item.node);
+  })();
+
+  const sortedData = isHoveredPlayerPlotted
+    ? [...data].sort((a, b) => {
+      if (a.playerId === hoveredPlayerId) return 1;
+      if (b.playerId === hoveredPlayerId) return -1;
+      return 0;
+    })
+    : data;
+
+  const defaultFormatTick = (val: number) => {
+    if (val >= 1000) {
+      const k = val / 1000;
+      return `${Number(k.toFixed(1))}k`;
+    }
+    return `${val}`;
+  };
+
+  const renderYTick = formatYTick ?? defaultFormatTick;
+
+  return (
+    <div className="w-full bg-[color:var(--panel)] p-2 border border-white/5">
+      <div
+        className="flex flex-wrap gap-x-1 gap-y-1"
+        onMouseLeave={() => setHoveredPlayerId(null)}
+      >
+        {players.map((p, idx) => {
+          const isDimmed = isHoveredPlayerPlotted && hoveredPlayerId !== p.id;
+          const isHovered = isHoveredPlayerPlotted && hoveredPlayerId === p.id;
+          return (
+            <button
+              type="button"
+              key={`${p.id}-${idx}`}
+              tabIndex={-1}
+              className="flex items-center gap-1.5 whitespace-nowrap select-none px-2.5 py-2 cursor-pointer touch-manipulation appearance-none bg-transparent border-0 text-left font-inherit outline-none"
+              style={{
+                opacity: isDimmed ? 0.15 : 1,
+                transition: "opacity 0.1s ease-out",
+              }}
+              onMouseEnter={() => setHoveredPlayerId(p.id)}
+              onMouseLeave={() => setHoveredPlayerId(null)}
+            >
+              <span
+                className="w-2 h-2 rounded-full shrink-0"
+                style={{ background: getPlayerColor(p.id) }}
+              />
+              <span
+                className={`text-xs transition-colors duration-150 ${isHovered ? "text-[color:var(--foreground)]" : "text-[color:var(--muted)]"
+                  }`}
+              >
+                {p.name}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto overflow-visible select-none">
+        {/* Y Axis Grid & Labels */}
+        {yTicks.map((val) => {
+          const y = getY(val);
+          return (
+            <g key={val}>
+              <line
+                x1={padding.left}
+                y1={y}
+                x2={width - padding.right}
+                y2={y}
+                stroke="currentColor"
+                strokeDasharray="4 4"
+                className="text-[color:var(--chart-grid)]"
+              />
+              <text
+                x={padding.left - 12}
+                y={y}
+                fill="currentColor"
+                fontSize="10"
+                textAnchor="end"
+                alignmentBaseline="middle"
+                className="text-[color:var(--muted)]"
+              >
+                {renderYTick(val)}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* X Axis Grid & Labels */}
+        {[0, 0.25, 0.5, 0.75, 1].map((p) => {
+          const minuteVal = p * maxMinute;
+          const x = getX(minuteVal);
+          const label = maxMinute <= 1 ? `${Math.round(minuteVal * 60)}s` : `${Math.round(minuteVal)}m`;
+          return (
+            <g key={p}>
+              <line
+                x1={x}
+                y1={padding.top}
+                x2={x}
+                y2={height - padding.bottom}
+                stroke="currentColor"
+                strokeDasharray="4 4"
+                className="text-[color:var(--chart-grid)]"
+              />
+              <text
+                x={x}
+                y={height - 15}
+                fill="currentColor"
+                fontSize="10"
+                textAnchor="middle"
+                className="text-[color:var(--muted)]"
+              >
+                {label}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Current Time Indicator */}
+        {selectedTime !== undefined && selectedTime > 0 && (
+          <g className="pointer-events-none">
+            <line
+              x1={Math.min(getX(selectedTime / 60), width - padding.right)}
+              y1={padding.top}
+              x2={Math.min(getX(selectedTime / 60), width - padding.right)}
+              y2={height - padding.bottom}
+              stroke="var(--foreground)"
+              strokeWidth="2"
+            />
+            <foreignObject
+              x={Math.min(getX(selectedTime / 60), width - padding.right) - 25}
+              y={padding.top - 14}
+              width="50"
+              height="30"
+            >
+              <div className="flex justify-center">
+                <span className="rounded bg-[color:var(--foreground)] px-1 py-0.5 text-[9px] font-bold tabular-nums text-[color:var(--panel)] shadow-sm whitespace-nowrap">
+                  {formatClock(selectedTime)}
+                </span>
+              </div>
+            </foreignObject>
+          </g>
+        )}
+
+        {/* Lines */}
+        {sortedData.map((playerData) => {
+          const color = getPlayerColor(playerData.playerId);
+          if (playerData.history.length < 2) return null;
+
+          const isLineHovered = isHoveredPlayerPlotted && playerData.playerId === hoveredPlayerId;
+          const isLineDimmed = isHoveredPlayerPlotted && !isLineHovered;
+
+          // Use a smooth path
+          let d = `M ${getX(playerData.history[0].minute)} ${getY(getPointVal(playerData.history[0]))}`;
+          for (let i = 1; i < playerData.history.length; i++) {
+            const p = playerData.history[i];
+            const prev = playerData.history[i - 1];
+            const cp1x = getX(prev.minute + (p.minute - prev.minute) / 2);
+            const cp1y = getY(getPointVal(prev));
+            const cp2x = getX(prev.minute + (p.minute - prev.minute) / 2);
+            const cp2y = getY(getPointVal(p));
+            d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${getX(p.minute)} ${getY(getPointVal(p))}`;
+          }
+
+          return (
+            <g key={playerData.playerId} className="pointer-events-none">
+              {/* Outline highlight when selected */}
+              {isLineHovered && (
+                <path
+                  d={d}
+                  fill="none"
+                  stroke="var(--chart-line-highlight)"
+                  strokeWidth={5}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                />
+              )}
+              {/* Main colored line */}
+              <path
+                d={d}
+                fill="none"
+                stroke={color}
+                strokeWidth={isLineHovered ? 3 : isLineDimmed ? 1 : 2}
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                style={{
+                  opacity: isLineDimmed ? 0.3 : 1,
+                  transition: "opacity 0.1s ease-out, stroke-width 0.1s ease-out",
+                }}
+              />
+            </g>
+          );
+        })}
+
+        {/* Age-up Indicators */}
+        {renderedAgeIndicators}
+      </svg>
+    </div>
+  );
+}
+
+export function APMChart(props: TimeSeriesChartProps) {
+  return <TimeSeriesChart {...props} />;
+}

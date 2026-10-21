@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/SiegeEngineers/aoe2techtree",
+  "commit": "3bb43b1439eef88dfe7fe892d7f7dc41ac9dd76f",
+  "reviewed_on": "2026-10-15",
+  "edition": "AoE2 DE base game",
+  "declared_update": 185872,
+  "update_provenance": "index.html at pinned commit; commit message links the same update",
+  "code_license": "MIT",
+  "content_notice": "Upstream uses Microsoft game content under Game Content Usage Rules. MIT for the project is not a blanket license for Microsoft assets. No artwork or game data file is bundled here.",
+  "files": [
+    {"path": "data.json", "upstream_path": "data/data.json", "sha256": "66a439979afe62f71541cff05280837abfb04e7732e364e2eae2f318862ade6d"},
+    {"path": "strings.en.json", "upstream_path": "data/locales/en/strings.json", "sha256": "94f3077c8011ef3e57a2012d9cc7158499257b4c2dc8e5382c77e007249618b3"},
+    {"path": "trees/FRANKS.json", "upstream_path": "data/trees/FRANKS.json", "sha256": "6cac478c4429edd704acb6bad6c1bf323b6d8f92cf5fece66dc021358497a915"},
+    {"path": "trees/BOHEMIANS.json", "upstream_path": "data/trees/BOHEMIANS.json", "sha256": "24fd863deb656ab354a58aa65be3f0c56f6df4c6593c0dcdc935752c0846884a"},
+    {"path": "trees/BRITONS.json", "upstream_path": "data/trees/BRITONS.json", "sha256": "f2b4ba0dc2b8b9932a55eb72de17070088f9bf5484308b5d8fa660195342c0b0"},
+    {"path": "trees/BERBERS.json", "upstream_path": "data/trees/BERBERS.json", "sha256": "e4bdd99fa5664b7491e0c11750699ebdcdd436c68e3ed737005ec63e6332dcbb"},
+    {"path": "LICENSE", "upstream_path": "LICENSE", "sha256": "a4164963b199adf330ecdfa7fde4ad84906d2bef7a3c8e99406c231313992f1c"},
+    {"path": "index.html", "upstream_path": "index.html", "sha256": "f4f3695c3e872ae5bf8be6dcc8df271762aa4f2450590208c204eb8675aeec28"}
+  ]
+}

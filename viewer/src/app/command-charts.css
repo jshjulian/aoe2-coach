@@ -1,0 +1,41 @@
+/* Local chart palette; labels/counts remain visible without color. */
+.command-charts {
+  --queue-series-0: #e8ad52;
+  --queue-series-1: #54b9c3;
+  --queue-series-2: #c879d2;
+  --queue-series-3: #7fa7ef;
+  --queue-series-4: #77bf89;
+  --queue-series-5: #d58275;
+  --queue-series-6: #b2a177;
+  --queue-series-7: #9e94da;
+  min-width: 0;
+}
+html.light .command-charts {
+  --queue-series-0: #8a5600;
+  --queue-series-1: #0b6975;
+  --queue-series-2: #8a3ba0;
+  --queue-series-3: #285bb4;
+  --queue-series-4: #287147;
+  --queue-series-5: #a54335;
+  --queue-series-6: #775d24;
+  --queue-series-7: #6751aa;
+}
+@media (prefers-color-scheme: light) {
+  html:not(.dark) .command-charts {
+    --queue-series-0: #8a5600;
+    --queue-series-1: #0b6975;
+    --queue-series-2: #8a3ba0;
+    --queue-series-3: #285bb4;
+    --queue-series-4: #287147;
+    --queue-series-5: #a54335;
+    --queue-series-6: #775d24;
+    --queue-series-7: #6751aa;
+  }
+}
+.command-charts [role="button"]:focus-visible,
+.command-charts button:focus-visible,
+.command-charts select:focus-visible,
+.command-charts summary:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
