@@ -36,13 +36,18 @@ coverage/
 # deliberately not part of the initial source snapshot. They remain on disk.
 /docs/*
 !/docs/setup.md
+!/docs/military-commitment.md
 /test_*.py
+!/test_military_commitment.py
+!/test_military_commitment_api.py
 !/test_launcher.py
 !/test_replay_settings.py
 !/test_map_previews.py
 !/test_reference_snapshot.py
 /tools/browser*.mjs
 /tools/run_*_browser_smoke.py
+!/tools/browser_military_commitment_smoke.mjs
+!/tools/run_military_commitment_browser_smoke.py
 /tools/build_review_package.py
 /tools/review_reasoning_cases.py
 /viewer/LOCAL-INTEGRATION.md

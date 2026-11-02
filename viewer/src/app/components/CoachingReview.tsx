@@ -7,6 +7,7 @@ import { SituationReview } from './SituationReview';
 import { GameplayDecision } from './GameplayDecision';
 import { BalancedTakeaway } from './BalancedTakeaway';
 import { MilitaryReasoning } from './MilitaryReasoning';
+import { MilitaryCommitment } from './MilitaryCommitment';
 import { usableReasoning } from '@/lib/militaryReasoning';
 import { usableTakeaway } from '@/lib/balancedTakeaway';
 import { GameplayMatchups } from './GameplayMatchups';
@@ -135,6 +136,7 @@ export function CoachingReview({ analysis, gameId, profileName, onOpenEvidence, 
     {gameplayIdentity&&gameplay&&(reasoning?<details className="mt-3 text-sm"><summary className="cursor-pointer font-semibold">Other conditional matchup references</summary><GameplayMatchups packet={gameplay} analysis={analysis} onOpenEvidence={onOpenEvidence} /></details>:<GameplayMatchups packet={gameplay} analysis={analysis} onOpenEvidence={onOpenEvidence} />)}
     {error && <p role="alert" className="mt-3 rounded border border-amber-500/40 p-3 text-sm">{error} — restart the local app if this API is unavailable.</p>}
   </section>
+  <MilitaryCommitment value={response?.commitment_context} analysis={analysis} profileName={profileName} busy={busy} save={save} onOpenEvidence={onOpenEvidence} />
   <PracticeGuide packet={response?.practice_context} progress={response?.progress_context} analysis={analysis} playerName={profileName} busy={busy} save={save} openJournal={()=>preparePractice(focus?undefined:displayedSourceId)} onChangeHabit={()=>preparePractice(displayedSuggestion?.id,true)} onOpenEvidence={onOpenEvidence} onOpenMatch={onOpenPracticeMatch} knownMatches={practiceMatchIds} />
   <PracticePanel packet={response?.practice_context} analysis={analysis} playerName={profileName} busy={busy} save={save} onOpenEvidence={onOpenEvidence} onOpenMatch={onOpenPracticeMatch} knownMatches={practiceMatchIds} preferredSuggestion={practiceSuggestion} saveError={error} />
   <details className="panel-strong rounded-xl p-4"><summary className="text-sm font-semibold">Saved practice, references & export</summary><section>
@@ -200,7 +202,7 @@ export function CoachingReview({ analysis, gameId, profileName, onOpenEvidence, 
     </details>
     {review && <>
       <details className="mt-4 rounded-lg border border-[color:var(--border-subtle)] p-3"><summary className="text-sm font-semibold">Export / share this review</summary>
-        <p className="mt-2 text-xs text-[color:var(--muted)]">Exports the previous automatic situation/legacy review only—not situational composition reasoning or its player-reviewed answers, the balanced takeaway, new gameplay checkpoint or its corrections, practice journal, custom focuses, authored reviews, observation batches, screenshots or raw events. Player names are anonymized by default; local paths and match hashes are never included.</p>
+        <p className="mt-2 text-xs text-[color:var(--muted)]">Exports the previous automatic situation/legacy review only—not military commitment windows or their explanations, situational composition reasoning or its player-reviewed answers, the balanced takeaway, new gameplay checkpoint or its corrections, practice journal, custom focuses, authored reviews, observation batches, screenshots or raw events. Player names are anonymized by default; local paths and match hashes are never included.</p>
         <label className="mt-2 flex items-center gap-2 text-sm"><input type="checkbox" checked={includeNames} onChange={e => setIncludeNames(e.target.checked)} /> Include player names in this export</label>
         <div className="mt-3 flex flex-wrap gap-2"><button className={button} onClick={async () => {
           const markdown = exportMarkdown;

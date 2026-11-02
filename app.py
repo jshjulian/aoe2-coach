@@ -30,6 +30,7 @@ import practice
 import gameplay
 import balanced_takeaway
 import military_reasoning
+import military_commitment
 import practice_progress
 import map_previews
 from replay_settings import select_directories
@@ -499,6 +500,7 @@ class Handler(BaseHTTPRequestHandler):
                 'practice_context': journal, 'progress_context': practice_progress.context(self.coaching_store, journal),
                 'takeaway_context': balanced_takeaway.build(report, review, situation, decisions, journal),
                 'reasoning_context': reasoning,
+                'commitment_context': military_commitment.build(report, name, self.coaching_store),
                 'matchup': build_matchup(report, name, state.get('rules_context')),
                 'observation_context': self.observation_store.context(report, name),
                 'reviewed_moment_context': self.reviewed_moment_store.read(report, name, self.observation_store)}
@@ -529,7 +531,7 @@ class Handler(BaseHTTPRequestHandler):
         route = urlparse(self.path)
         query = parse_qs(route.query)
         if route.path in ('/', '/api/health'):
-            self._json(200, {'service': 'AoE2 Replay Lab analysis API', 'api_version': 4, 'matchup_version': MATCHUP_VERSION, 'provenance_version': PROVENANCE_VERSION, 'situation_version': SITUATION_VERSION, 'situation_review_version': REVIEW_VERSION, 'observations_version': OBSERVATIONS_VERSION, 'reviewed_moments_version': 1, 'practice_version': practice.VERSION, 'practice_controls_version': practice.CONTROLS_VERSION, 'gameplay_version': gameplay.VERSION, 'progress_version': practice_progress.VERSION, 'takeaway_version': balanced_takeaway.VERSION, 'reasoning_version': military_reasoning.VERSION, 'library_visuals_version': 1, 'replay_settings_version': 1, 'observation_collection_enabled': False, 'local_only': True,
+            self._json(200, {'service': 'AoE2 Replay Lab analysis API', 'api_version': 4, 'matchup_version': MATCHUP_VERSION, 'provenance_version': PROVENANCE_VERSION, 'situation_version': SITUATION_VERSION, 'situation_review_version': REVIEW_VERSION, 'observations_version': OBSERVATIONS_VERSION, 'reviewed_moments_version': 1, 'practice_version': practice.VERSION, 'practice_controls_version': practice.CONTROLS_VERSION, 'gameplay_version': gameplay.VERSION, 'progress_version': practice_progress.VERSION, 'takeaway_version': balanced_takeaway.VERSION, 'reasoning_version': military_reasoning.VERSION, 'library_visuals_version': 1, 'replay_settings_version': 1, 'military_commitment_version': military_commitment.VERSION, 'observation_collection_enabled': False, 'local_only': True,
                              'replay_directories': [str(p) for p in self.library.folders()],
                              'analysis_endpoint': '/api/analysis?game_id=<id>'})
             return
@@ -662,6 +664,9 @@ class Handler(BaseHTTPRequestHandler):
             if payload.get('operation') in practice.OPERATIONS:
                 packet = self._coaching_review(query, with_matchup=True)
                 practice.save(self.coaching_store, packet['practice_context'], payload)
+            elif payload.get('operation') == 'commitment_answer':
+                packet = self._coaching_review(query, with_matchup=True)
+                military_commitment.save_answer(self.coaching_store, packet['commitment_context'], payload)
             elif payload.get('operation') == 'reasoning_answer':
                 packet = self._coaching_review(query, with_matchup=True)
                 military_reasoning.save_answer(self.coaching_store, packet['reasoning_context'], payload)

@@ -47,5 +47,5 @@ export interface CoachingState {
   goal: {selection_id: string; label: string; active: boolean; baseline_seconds: number; baseline_match_id: string} | null;
   evaluations: Array<{match_id: string; checklist: string; adaptation: string; metric_status: string; interval_seconds: number | null; delta_from_baseline_seconds: number | null}>;
 }
-export interface CoachingResponse { reasoning_context?: MilitaryReasoning; takeaway_context?: TakeawayContext; progress_context?: PracticeProgress; gameplay_context?: GameplayContext; practice_context?: PracticeContext; review: CoachingReview; state: CoachingState; matchup?: MatchupReview; situation?: SituationReview; observation_context?: ObservationContext; reviewed_moment_context?: ReviewedMomentContext }
+export interface CoachingResponse { commitment_context?: unknown; reasoning_context?: MilitaryReasoning; takeaway_context?: TakeawayContext; progress_context?: PracticeProgress; gameplay_context?: GameplayContext; practice_context?: PracticeContext; review: CoachingReview; state: CoachingState; matchup?: MatchupReview; situation?: SituationReview; observation_context?: ObservationContext; reviewed_moment_context?: ReviewedMomentContext }
 export type OpenEvidence = (event: AnalysisEvent, label: string) => void;

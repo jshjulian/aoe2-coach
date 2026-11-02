@@ -13,7 +13,7 @@ HEALTH={
     'situation_version':1,'situation_review_version':2,'observations_version':1,
     'reviewed_moments_version':1,'practice_version':1,'practice_controls_version':1,
     'gameplay_version':2,'progress_version':1,'takeaway_version':1,
-    'reasoning_version':1,'library_visuals_version':1,'replay_settings_version':1,
+    'reasoning_version':1,'library_visuals_version':1,'replay_settings_version':1,'military_commitment_version':1,
 }
 
 

@@ -62,6 +62,7 @@ See **[setup and configuration](docs/setup.md)** for WSL paths, ports, optional 
 - Browse saved matches with locally rendered recorded-map previews.
 - Open Coach, follow an evidence reference to the exact replay clock, or inspect Events.
 - Explore military queue-input composition, observed age milestones, technology requests and Villager queue patterns. Cancellations are a separate ledger, not a net army count.
+- Expand **Coach → Military commitment** to review a new military line or an opening investment: keep producing, support it, adapt, or disengage. Optional explicit resource/intent explanations stay local and separate from measured facts, the main takeaway, habits and progress. See the [scope and safeguards](docs/military-commitment.md).
 - Choose one explicit practice habit and record your own opportunities/adaptations. Browsing does not save a habit or clarification.
 - Use **My stats** for local records against opponent display names and civilizations. Exact-content duplicate copies count once; unknown outcomes are shown separately and excluded from win-rate denominators. These are not official lifetime account statistics.
 
@@ -84,7 +85,8 @@ This makes GET requests only for pinned public reference files; it sends no repl
 Portable checks included in this initial Git snapshot:
 
 ```bash
-.venv/bin/python -m unittest -v test_launcher test_replay_settings test_map_previews test_reference_snapshot
+.venv/bin/python -m unittest -v test_launcher test_replay_settings test_map_previews test_reference_snapshot test_military_commitment test_military_commitment_api
+node tools/test_military_commitment.mjs
 node tools/test_library_stats.mjs
 node tools/test_command_charts.mjs
 (cd viewer && npx --no-install tsc --noEmit)
@@ -97,4 +99,4 @@ Historical research notes, private replay-dependent tests/browser fixtures and t
 
 `data/`, personal settings, replays, journals, annotations, screenshots, research, dependencies, secrets and build outputs are excluded from Git. Keep each user's installation and private data separate. Don't force-add ignored files.
 
-**This is a private development repository, not a cleared public release.** The inherited viewer root has no identified project license; bundled dependencies have separate terms. No blanket license is asserted. Review **[sharing and third-party notices](SHARING.md)** before distributing or publishing it. A local Git commit does not upload anything.
+**This is a development snapshot, not a cleared public release.** The inherited viewer root has no identified project license; bundled dependencies have separate terms. No blanket license is asserted. Review **[sharing and third-party notices](SHARING.md)** before distributing or publishing it. A local Git commit does not upload anything.
