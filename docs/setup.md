@@ -79,6 +79,10 @@ AOE2_COACH_API_PORT=8766 ./run-viewer.sh --port 3001 --replays "/path/to/savegam
 
 The API-only command supports the same `--replays`/`--config` flags. Both services bind to `127.0.0.1`. Read startup errors in ignored `data/replay-lab-api.log`. Startup never runs pip/npm installation or updates; missing dependencies need the explicit setup commands above.
 
+## Turbopack cannot spawn Node
+
+If a build reports `spawning node pooled process` followed by `No such file or directory`, check that the selected Linux Node is available to child processes, not just to the launcher. The launcher prepends the resolved Node executable's directory to `PATH` for CSS/PostCSS workers. Set `AOE2_NODE_BIN` to an absolute Linux `node` path if needed; a Windows executable is not supported in WSL. This does not require reinstalling packages or deleting replay data.
+
 ## Reference catalogs and private data
 
 The initial Git snapshot contains source locks, not the local downloaded research cache. To restore only their already-pinned public files, explicitly run:

@@ -37,6 +37,7 @@ coverage/
 /docs/*
 !/docs/setup.md
 /test_*.py
+!/test_launcher.py
 !/test_replay_settings.py
 !/test_map_previews.py
 !/test_reference_snapshot.py

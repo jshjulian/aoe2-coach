@@ -28,7 +28,13 @@ if [[ -z "$NODE_BIN" ]]; then
     if [[ -n "$candidate" && -x "$candidate" ]] && [[ "$("$candidate" -p 'process.platform' 2>/dev/null || true)" == linux ]]; then NODE_BIN="$candidate"; break; fi
   done
 fi
-if [[ -z "$NODE_BIN" ]]; then echo 'Linux Node.js required. See docs/setup.md.' >&2; exit 1; fi
+if [[ -z "$NODE_BIN" || ! -x "$NODE_BIN" ]] || [[ "$("$NODE_BIN" -p 'process.platform' 2>/dev/null || true)" != linux ]]; then
+  echo 'Linux Node.js required. Set AOE2_NODE_BIN to its executable; see docs/setup.md.' >&2; exit 1
+fi
+# Next/Turbopack spawns CSS/PostCSS workers by the name "node". Selecting an
+# absolute executable above is not enough when the terminal PATH lacks Node.
+NODE_BIN="$(readlink -f "$NODE_BIN")"
+export PATH="$(dirname "$NODE_BIN"):$PATH"
 if [[ ! -f "$ROOT/viewer/node_modules/next/dist/bin/next" ]]; then echo 'Viewer dependencies missing. Run npm ci in viewer as described in docs/setup.md; startup never installs packages.' >&2; exit 1; fi
 API_PORT="${AOE2_COACH_API_PORT:-8765}"
 API_URL="${NEXT_PUBLIC_COACH_API_URL:-http://127.0.0.1:${API_PORT}}"

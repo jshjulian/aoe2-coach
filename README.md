@@ -84,7 +84,7 @@ This makes GET requests only for pinned public reference files; it sends no repl
 Portable checks included in this initial Git snapshot:
 
 ```bash
-.venv/bin/python -m unittest -v test_replay_settings test_map_previews test_reference_snapshot
+.venv/bin/python -m unittest -v test_launcher test_replay_settings test_map_previews test_reference_snapshot
 node tools/test_library_stats.mjs
 node tools/test_command_charts.mjs
 (cd viewer && npx --no-install tsc --noEmit)
