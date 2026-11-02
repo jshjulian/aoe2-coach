@@ -8,6 +8,7 @@ import { canonicalTeam } from "@/lib/teamIdentity";
 import { CoachingReview } from "./CoachingReview";
 import { OpeningSummary } from "./OpeningSummary";
 import { CommandCharts } from "./CommandCharts";
+import { MatchupDashboard } from "./MatchupDashboard";
 
 type Props = {
   analysis: PythonAnalysis | null;
@@ -150,6 +151,7 @@ export const CoachTab = memo(function CoachTab({ analysis, status, error, player
       <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-3 text-xs text-[color:var(--muted)]"><span>{analysis.source_file} · {dateLabel ? `Started ${dateLabel}` : 'Start time unavailable'} · {realDuration != null ? `~${formatClock(realDuration)} real at ${gameSpeed?.toFixed(2) ?? 'recorded'}×` : 'Real-time estimate unavailable'}</span><span>{outcomeConfirmed ? "Result from parser-reported winner/resignation data." : "Replay has no confirmed winner flag; result intentionally left unverified."} Elo snapshots and adjacent differences are shifted back one saved replay as requested; they are not verified official per-match changes. The latest match has no following snapshot, so its post-match Elo is unknown. Real time is estimated from the recorded game-speed multiplier; pauses/loading are not measured. APM is input activity, not a skill score.</span></div>
       </details>
     </section>
+    <MatchupDashboard key={`guide:${analysis.match_id}:${profileName}`} analysis={analysis} profileName={profileName} onOpenEvidence={onOpenEvidence} />
     <CoachingReview key={`${analysis.match_id}:${profileName}`} analysis={analysis} gameId={gameId} profileName={profileName} onOpenEvidence={onOpenEvidence} onOpenObservedEvidence={onOpenObservedEvidence} onOpenPracticeMatch={onOpenPracticeMatch} practiceMatchIds={recentGames.flatMap(g=>g.match_id?[g.match_id]:[])} />
     <CommandCharts key={analysis.match_id} analysis={analysis} onOpenEvidence={onOpenEvidence} />
     <details className="panel-strong rounded-xl p-4"><summary className="text-sm font-semibold">More match context & observations</summary><div className="mt-3 flex flex-col gap-3">

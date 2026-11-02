@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),ts=require('../viewer/node_modules/typescript'),Module=require('node:module');
+function compile(file,deps={}){const m=new Module(file);m.require=id=>deps[id];m._compile(ts.transpileModule(fs.readFileSync(`viewer/src/lib/${file}.ts`,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,file);return m.exports;}
+const data=compile('matchupGuideData'),{buildGuideBoard}=compile('matchupGuide',{'./matchupGuideData':data});
+function event(id,t,extra={}){return {id,time_seconds:t,player_id:2,player:'Other',action:'DE_QUEUE',kind:'queue_command',status:'command',category:'military',unit:'Serjeant',unit_type_id:1660,amount:1,...extra};}
+function fixture(){return {schema_version:5,match_id:'a'.repeat(64),duration_seconds:1200,players:[{id:1,name:'You',civilization:'Franks',team_id:[1],won:true},{id:2,name:'Other',civilization:'Sicilians',team_id:[2],won:false}],replay_provenance:{provenance_version:2,edition:'DE',dataset_id:100,game_type_id:0,cheats:false,all_technologies:false,build_version:188329},events:[event('s1',500),event('s2',600),event('k',700,{player_id:1,player:'You',unit:'Knight',unit_type_id:38})]};}
+let count=0;function test(name,fn){fn();count++;}const mutate=fn=>{const f=fixture();fn(f);return buildGuideBoard(f,'You');};
+test('Sicilian guide is visible independently of old optional packets',()=>{const b=buildGuideBoard(fixture(),'You');assert.equal(b.guide.id,'franks-sicilians-v1');assert.equal(b.patch,'different_build');assert.equal(b.opponentQueues[0].inputs,2);assert.equal(b.ownQueues[0].label,'Knight');});
+test('result and Elo do not change selected guide or input summary',()=>{const a=buildGuideBoard(fixture(),'You');const b=mutate(f=>{f.players[0].won=false;f.players[1].won=true;f.players[0].elo_snapshot=9000;});assert.deepEqual(a.guide,b.guide);assert.deepEqual(a.ownQueues,b.ownQueues);assert.deepEqual(a.opponentQueues,b.opponentQueues);});
+test('reference match is not mod verification',()=>assert.equal(mutate(f=>f.replay_provenance.build_version=185872).patch,'same_reference_build'));
+test('unknown build stays unknown',()=>assert.equal(mutate(f=>delete f.replay_provenance.build_version).patch,'unknown_build'));
+test('missing quantity never becomes one unit',()=>{const b=mutate(f=>f.events[0].amount=null);assert.equal(b.opponentQueues[0].missingQuantity,1);assert(!('units' in b.opponentQueues[0]));});
+test('invalid amounts do not become investments',()=>{for(const v of [0,-1,true,1.5,'1',32768])assert.equal(mutate(f=>f.events[0].amount=v).opponentQueues[0].inputs,1);});
+test('unit name and numeric namespace must both match',()=>{for(const patch of [{unit:'Sergeant'},{unit_type_id:1662},{unit_type_id:'1660'}])assert.equal(mutate(f=>Object.assign(f.events[0],patch)).opponentQueues[0].inputs,1);});
+test('verified Castle and Donjon Serjeant variants are explicit',()=>assert.equal(mutate(f=>f.events[0].unit_type_id=1658).opponentQueues[0].inputs,2));
+test('research and cancellation are not army queues',()=>{for(const patch of [{action:'RESEARCH',kind:'research_command'},{action:'DE_QUEUE',kind:'cancel_command'}])assert.equal(mutate(f=>Object.assign(f.events[0],patch)).opponentQueues[0].inputs,1);});
+test('multi-building selection is not a multiplier',()=>assert.equal(mutate(f=>f.events[0].object_ids=[1,2,3,4]).opponentQueues[0].inputs,2));
+test('quantity does not rank groups as fielded units',()=>assert.equal(mutate(f=>f.events[0].amount=50).opponentQueues[0].inputs,2));
+test('earliest exact source clock survives unsorted input',()=>{const b=mutate(f=>{f.events.reverse();f.events.push(event('s0',100));});assert.equal(b.opponentQueues[0].first.id,'s0');});
+test('summary capped at three types per actor',()=>{const b=mutate(f=>f.events.push(...[[4,'Archer'],[93,'Spearman'],[448,'Scout Cavalry'],[279,'Scorpion']].map(([id,unit],i)=>event(`extra${i}`,800+i,{unit_type_id:id,unit}))));assert.equal(b.opponentQueues.length,3);});
+test('unknown military disclosed without aliases',()=>{const b=mutate(f=>f.events[0].unit_type_id=9999);assert.equal(b.unknownMilitary,1);assert.equal(b.opponentQueues[0].inputs,1);});
+test('no known input does not invent an army or zero units',()=>{const b=mutate(f=>f.events=[]);assert.equal(b.opponentQueues.length,0);assert.equal(b.guide.id,'franks-sicilians-v1');});
+test('general guide does not assign Frank options to another civ',()=>{const b=mutate(f=>f.players[0].civilization='Britons');assert.equal(b.specialized,false);assert.equal(b.guide.id,'general-land-review-v1');});
+test('four authored pairs with explicit general fallback',()=>{for(const civ of Object.keys(data.FRANKS_GUIDES))assert.equal(mutate(f=>f.players[1].civilization=civ).specialized,true);assert.equal(mutate(f=>f.players[1].civilization='Armenians').specialized,false);});
+test('prototype name does not become authored content',()=>assert.equal(mutate(f=>f.players[1].civilization='__proto__').specialized,false));
+test('ambiguous selected player withheld',()=>assert.equal(mutate(f=>f.players[1].name='You'),null));
+test('unknown selected player withheld',()=>assert.equal(buildGuideBoard(fixture(),'Nobody'),null));
+test('teams same membership mixed or unresolved withheld',()=>{for(const team of [[1,2],[],null,1])assert.equal(mutate(f=>f.players[1].team_id=team),null);});
+test('coherent scalar opposition accepted',()=>assert(mutate(f=>{f.players[0].team_id=1;f.players[1].team_id=2;})));
+test('unfinished replay not live assistance',()=>{for(const won of [null,true])assert.equal(mutate(f=>f.players[1].won=won),null);});
+test('unsupported schemas and clocks withheld',()=>{assert.equal(mutate(f=>f.schema_version=4),null);for(const t of [0,-1,NaN,Infinity,86401])assert.equal(mutate(f=>f.duration_seconds=t),null);});
+test('known custom modes mods and cheats withheld',()=>{for(const extra of [{game_type_id:1},{edition:'AOC'},{dataset_id:99},{all_technologies:true},{cheats:true},{de_cheats:true},{metadata_cheats:true},{reported_mod:{name:'custom'}},{rms_mod_id:123}])assert.equal(mutate(f=>Object.assign(f.replay_provenance,extra)),null);});
+test('missing mode metadata not repaired',()=>assert.equal(mutate(f=>delete f.replay_provenance.game_type_id),null));
+test('bad identity actors duplicate IDs and clocks fail closed',()=>{for(const fn of [f=>f.match_id='x',f=>f.events.push({...f.events[0]}),f=>f.events[0].player_id=3,f=>f.events[0].player='Wrong',f=>f.events[0].time_seconds=NaN,f=>f.events[0].time_seconds=1201,f=>f.events.push(null)])assert.equal(mutate(fn),null);});
+test('event budget bounded',()=>assert.equal(mutate(f=>f.events=Array(300001).fill(f.events[0])),null));
+test('builder does not mutate sources or create state',()=>{const f=fixture(),before=structuredClone(f);buildGuideBoard(f,'You');assert.deepEqual(f,before);});
+test('guides complete and original prose has no outcome verdict',()=>{for(const g of [...Object.values(data.FRANKS_GUIDES),data.GENERAL_GUIDE]){assert.equal(g.army.length,3);for(const k of ['headline','expect','position','watch','why','cue'])assert.equal(typeof g[k],'string');assert(!JSON.stringify(g).includes('guaranteed win'));}});
+console.log(`${count} matchup guide tests passed.`);

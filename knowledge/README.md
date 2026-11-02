@@ -1,5 +1,16 @@
 # Versioned civilization knowledge — reviewed reference pack
 
+## Educational matchup dashboard v1
+
+The main Coach now includes a separate [matchup field guide](../docs/matchup-dashboard.md):
+original editorial reference prose, visible patch/standard-rules caveats, and bounded
+exact queue-input summaries. Franks vs Sicilians/Britons/Bohemians/Berbers have authored
+cards; other pairs use an explicit general guide. Capability facts were checked against
+the existing 56-tree source lock; no old pack, lock, gate, priority, habit or export is
+changed. This compiled educational content is not a verified recommendation applied to
+the replay and does not enable the older conditional matchup engine. No runtime
+reference download, proprietary art, resource reconstruction or combat model.
+
 ## Situational composition-response v1
 
 `../situational_knowledge.py` / `situational.v1.json` combine reusable conditional

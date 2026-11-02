@@ -37,9 +37,11 @@ coverage/
 /docs/*
 !/docs/setup.md
 !/docs/military-commitment.md
+!/docs/matchup-dashboard.md
 /test_*.py
 !/test_military_commitment.py
 !/test_military_commitment_api.py
+!/test_matchup_guide_reference.py
 !/test_launcher.py
 !/test_replay_settings.py
 !/test_map_previews.py
@@ -48,6 +50,8 @@ coverage/
 /tools/run_*_browser_smoke.py
 !/tools/browser_military_commitment_smoke.mjs
 !/tools/run_military_commitment_browser_smoke.py
+!/tools/browser_matchup_dashboard_smoke.mjs
+!/tools/run_matchup_dashboard_browser_smoke.py
 /tools/build_review_package.py
 /tools/review_reasoning_cases.py
 /viewer/LOCAL-INTEGRATION.md

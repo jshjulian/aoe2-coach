@@ -62,6 +62,7 @@ See **[setup and configuration](docs/setup.md)** for WSL paths, ports, optional 
 - Browse saved matches with locally rendered recorded-map previews.
 - Open Coach, follow an evidence reference to the exact replay clock, or inspect Events.
 - Explore military queue-input composition, observed age milestones, technology requests and Villager queue patterns. Cancellations are a separate ledger, not a net army count.
+- Start with the **Coach matchup dashboard**: eight rounded cards for matchup expectations, conditional age-based options, positions/support, exact queue-input summaries and an unsaved decision cue. Includes Franks vs Sicilians/Britons/Bohemians/Berbers; other pairs use an explicit general guide. Patch differences remain visible. [Scope and sources](docs/matchup-dashboard.md).
 - Expand **Coach → Military commitment** to review a new military line or an opening investment: keep producing, support it, adapt, or disengage. Optional explicit resource/intent explanations stay local and separate from measured facts, the main takeaway, habits and progress. See the [scope and safeguards](docs/military-commitment.md).
 - Choose one explicit practice habit and record your own opportunities/adaptations. Browsing does not save a habit or clarification.
 - Use **My stats** for local records against opponent display names and civilizations. Exact-content duplicate copies count once; unknown outcomes are shown separately and excluded from win-rate denominators. These are not official lifetime account statistics.
@@ -85,7 +86,8 @@ This makes GET requests only for pinned public reference files; it sends no repl
 Portable checks included in this initial Git snapshot:
 
 ```bash
-.venv/bin/python -m unittest -v test_launcher test_replay_settings test_map_previews test_reference_snapshot test_military_commitment test_military_commitment_api
+.venv/bin/python -m unittest -v test_launcher test_replay_settings test_map_previews test_reference_snapshot test_military_commitment test_military_commitment_api test_matchup_guide_reference
+node tools/test_matchup_guide.mjs
 node tools/test_military_commitment.mjs
 node tools/test_library_stats.mjs
 node tools/test_command_charts.mjs

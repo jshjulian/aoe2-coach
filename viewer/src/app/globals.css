@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./coach-studio.css";
+@import "./matchup-dashboard.css";
 @import "./command-charts.css";
 @source "..";
 @custom-variant dark (&:where(.dark, .dark *));
