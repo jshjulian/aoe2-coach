@@ -8,6 +8,7 @@ import { GameplayDecision } from './GameplayDecision';
 import { BalancedTakeaway } from './BalancedTakeaway';
 import { MilitaryReasoning } from './MilitaryReasoning';
 import { MilitaryCommitment } from './MilitaryCommitment';
+import { ArmyComposition } from './ArmyComposition';
 import { usableReasoning } from '@/lib/militaryReasoning';
 import { usableTakeaway } from '@/lib/balancedTakeaway';
 import { GameplayMatchups } from './GameplayMatchups';
@@ -112,7 +113,7 @@ export function CoachingReview({ analysis, gameId, profileName, onOpenEvidence, 
   const displayedSourceId=reasoning&&!fullReview?selectedReasoning?.id:takeaway&&!fullReview?takeawaySourceId:selectedDecision?.id??sourceSituation?.recommendations[0]?.id;
   const displayedSuggestion=practiceIdentity?practicePacket.suggestions.find(s=>s.id===displayedSourceId):undefined;
   const alreadyTraining=!!focus&&!!displayedSuggestion&&(['label','when','action','adapt'] as const).every(k=>focus[k]===displayedSuggestion[k]);
-  return <>{focus&&<div data-training-shortcut className="training-shortcut rounded-lg px-4 py-3 text-xs"><div className="min-w-0"><span className="font-semibold text-[color:var(--training-accent)]">Saved habit · across games</span><p className="mt-1 break-words">{focus.label} <span className="text-[color:var(--muted)]">— separate from this replay’s review.</span></p></div><button className="studio-secondary shrink-0 rounded-lg border px-3 py-2 font-semibold" disabled={busy} onClick={()=>preparePractice(displayedSuggestion?.id,true)}>Change habit</button></div>}<section data-replay-briefing className="coach-studio studio-review panel-strong rounded-xl border border-[color:var(--border-subtle)] p-5">
+  return <><ArmyComposition value={response?.composition_context} analysis={analysis} profileName={profileName} onOpenEvidence={onOpenEvidence} />{focus&&<div data-training-shortcut className="training-shortcut rounded-lg px-4 py-3 text-xs"><div className="min-w-0"><span className="font-semibold text-[color:var(--training-accent)]">Saved habit · across games</span><p className="mt-1 break-words">{focus.label} <span className="text-[color:var(--muted)]">— separate from this replay’s review.</span></p></div><button className="studio-secondary shrink-0 rounded-lg border px-3 py-2 font-semibold" disabled={busy} onClick={()=>preparePractice(displayedSuggestion?.id,true)}>Change habit</button></div>}<section data-replay-briefing className="coach-studio studio-review panel-strong rounded-xl border border-[color:var(--border-subtle)] p-5">
     <div className="studio-section-heading"><span>01 / Replay briefing</span><span>This match’s evidence. Not your saved habit.</span></div>
     {reasoning&&selectedReasoning&&!fullReview&&<MilitaryReasoning packet={reasoning} analysis={analysis} selectedId={selectedReasoning.id} onSelect={setReasoningId} onOpenEvidence={onOpenEvidence} onPractice={id=>preparePractice(id,!!focus)} canPractice={id=>!!practiceIdentity&&!!practicePacket?.suggestions.some(s=>s.id===id)} busy={busy} save={save} keep={takeaway?.positives.find(p=>p.id===takeaway.primary_positive_id)} />}
     {response?.reasoning_context?.status==='available'&&response.reasoning_context.primary_id&&!reasoning&&<p data-reasoning-invalid role="alert" className="mt-3 text-xs">Composition comparison identity, source or qualification mismatch. The compatible review remains available.</p>}
@@ -202,7 +203,7 @@ export function CoachingReview({ analysis, gameId, profileName, onOpenEvidence, 
     </details>
     {review && <>
       <details className="mt-4 rounded-lg border border-[color:var(--border-subtle)] p-3"><summary className="text-sm font-semibold">Export / share this review</summary>
-        <p className="mt-2 text-xs text-[color:var(--muted)]">Exports the previous automatic situation/legacy review only—not the matchup dashboard guide, military commitment windows or their explanations, situational composition reasoning or its player-reviewed answers, the balanced takeaway, new gameplay checkpoint or its corrections, practice journal, custom focuses, authored reviews, observation batches, screenshots or raw events. Player names are anonymized by default; local paths and match hashes are never included.</p>
+        <p className="mt-2 text-xs text-[color:var(--muted)]">Exports the previous automatic situation/legacy review only—not army-composition windows/unit mechanics, the matchup dashboard guide, military commitment windows or their explanations, situational composition reasoning or its player-reviewed answers, the balanced takeaway, new gameplay checkpoint or its corrections, practice journal, custom focuses, authored reviews, observation batches, screenshots or raw events. Player names are anonymized by default; local paths and match hashes are never included.</p>
         <label className="mt-2 flex items-center gap-2 text-sm"><input type="checkbox" checked={includeNames} onChange={e => setIncludeNames(e.target.checked)} /> Include player names in this export</label>
         <div className="mt-3 flex flex-wrap gap-2"><button className={button} onClick={async () => {
           const markdown = exportMarkdown;

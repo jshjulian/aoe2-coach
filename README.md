@@ -62,6 +62,7 @@ See **[setup and configuration](docs/setup.md)** for WSL paths, ports, optional 
 - Browse saved matches with locally rendered recorded-map previews.
 - Open Coach, follow an evidence reference to the exact replay clock, or inspect Events.
 - Explore military queue-input composition, observed age milestones, technology requests and Villager queue patterns. Cancellations are a separate ledger, not a net army count.
+- Review **army composition & unit mechanics**: recorded production-role windows, base damage/delivery, speed, armour/classes, roles and unique mechanics—not just strong/weak labels. Includes Gbeto ranged-melee mechanics and conditional counter-compositions with funding/protection prerequisites. No late/early verdict, fielded-army reconstruction or automatic habit change. [Coverage and sources](docs/army-composition.md).
 - Start with the **Coach matchup dashboard**: eight rounded cards for matchup expectations, conditional age-based options, positions/support, exact queue-input summaries and an unsaved decision cue. Includes Franks vs Sicilians/Britons/Bohemians/Berbers; other pairs use an explicit general guide. Patch differences remain visible. [Scope and sources](docs/matchup-dashboard.md).
 - Expand **Coach → Military commitment** to review a new military line or an opening investment: keep producing, support it, adapt, or disengage. Optional explicit resource/intent explanations stay local and separate from measured facts, the main takeaway, habits and progress. See the [scope and safeguards](docs/military-commitment.md).
 - Choose one explicit practice habit and record your own opportunities/adaptations. Browsing does not save a habit or clarification.
@@ -86,7 +87,8 @@ This makes GET requests only for pinned public reference files; it sends no repl
 Portable checks included in this initial Git snapshot:
 
 ```bash
-.venv/bin/python -m unittest -v test_launcher test_replay_settings test_map_previews test_reference_snapshot test_military_commitment test_military_commitment_api test_matchup_guide_reference
+.venv/bin/python -m unittest -v test_launcher test_replay_settings test_map_previews test_reference_snapshot test_military_commitment test_military_commitment_api test_matchup_guide_reference test_army_composition test_army_composition_api
+node tools/test_army_composition.mjs
 node tools/test_matchup_guide.mjs
 node tools/test_military_commitment.mjs
 node tools/test_library_stats.mjs

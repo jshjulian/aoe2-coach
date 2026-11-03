@@ -1,5 +1,17 @@
 # Versioned civilization knowledge — reviewed reference pack
 
+## Unit mechanics and counter-compositions v1
+
+`unit-mechanics.v1.json` / `../unit_knowledge.py` / `../army_composition.py`
+add a [mechanics and composition review](../docs/army-composition.md): exact scoped
+unit profiles with damage delivery/type, base speed/armour, attack/armour classes,
+roles, exceptions and conditional supported combinations. Gbeto is explicitly
+ranged melee infantry, not an Archer by appearance. All numeric/availability facts
+use the existing 60-file source lock; missing/mismatched bytes withhold facts, while
+unknown replay patches remain reference-only. Recorded-role windows and descriptive
+request intervals never establish fielded armies, player vision, reaction time,
+feasible transitions or improvement. No old pack/lock/ranking/habit/export is changed.
+
 ## Educational matchup dashboard v1
 
 The main Coach now includes a separate [matchup field guide](../docs/matchup-dashboard.md):
