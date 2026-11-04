@@ -14,6 +14,11 @@ const units=new Map<number,string>([
  [1658,'Serjeant'],[1660,'Serjeant'],[1659,'Elite Serjeant'],[1661,'Elite Serjeant'],
  [8,'Longbowman'],[530,'Elite Longbowman'],[41,'Huskarl'],[555,'Elite Huskarl']
 ]);
+export function guideQueueLabel(e:AnalysisEvent):string|null {
+ if(e.kind!=='queue_command'||e.status!=='command'||!['DE_QUEUE','QUEUE'].includes(e.action)||e.amount!=null&&(!Number.isInteger(e.amount)||e.amount<=0||e.amount>32767))return null;
+ const label=typeof e.unit_type_id==='number'?units.get(e.unit_type_id):undefined;
+ return label&&label===e.unit?label:null;
+}
 const validText=(v:unknown):v is string=>typeof v==='string'&&v.length>0&&v.length<=160&&!/[\x00-\x1f]/.test(v);
 function opposing(a:PythonAnalysis['players'][number],b:PythonAnalysis['players'][number]){
  const x=a.team_id,y=b.team_id;

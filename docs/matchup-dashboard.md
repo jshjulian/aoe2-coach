@@ -1,6 +1,6 @@
 # Matchup-first Coach dashboard v1
 
-The Coach home now starts with a responsive eight-card field guide, beside the existing replay-library sidebar. This is an original CSS-only bento layout, not downloaded art or a native replay/minimap load. The match overview stays above it. A visible **Jump to replay review** button gives direct access to the existing evidence briefing; its compact practice/timeline layout is checked after that explicit navigation rather than against the old home viewport. The existing ranked replay briefing, military commitment review, practice guide, journal, charts and deeper references remain below.
+The eight-card field guide is now browsed inside **Matchup & unit reference book**, below the [replay-first coaching home](replay-coach-home.md), beside the existing replay-library sidebar. This is an original CSS-only bento layout, not downloaded art or a native replay/minimap load. The match overview stays above it. A visible **Jump to replay review** button gives direct access to the existing evidence briefing; its compact practice/timeline layout is checked after that explicit navigation rather than against the old home viewport. The existing ranked replay briefing, military commitment review, practice guide, journal, charts and deeper references remain below.
 
 ## Cards
 

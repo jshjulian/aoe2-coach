@@ -14,7 +14,7 @@ from observations import ObservationStore
 from reviewed_moments import ReviewedMomentStore
 
 
-def main():
+def main(script='browser_army_composition_smoke.mjs'):
     with tempfile.TemporaryDirectory(prefix='agewise-army-browser-') as directory:
         class Handler(app.Handler):
             library=app.ReplayLibrary()
@@ -26,7 +26,7 @@ def main():
         server=ThreadingHTTPServer(('127.0.0.1',0),Handler);thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
         try:
             environment={**os.environ,'ARMY_TEST_API_URL':f'http://127.0.0.1:{server.server_port}'}
-            result=subprocess.run(['node',str(ROOT/'tools/browser_army_composition_smoke.mjs')],cwd=ROOT,env=environment).returncode
+            result=subprocess.run(['node',str(ROOT/'tools'/script)],cwd=ROOT,env=environment).returncode
             with Handler.coaching_store._connect() as db:
                 assert db.execute('SELECT COUNT(*) FROM records').fetchone()[0]==0
                 assert db.execute('SELECT COUNT(*) FROM revisions').fetchone()[0]==0

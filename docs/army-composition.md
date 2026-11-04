@@ -1,6 +1,6 @@
 # Unit mechanics and composition review v1
 
-Coach now includes **Read the army’s jobs—not just its unit names**, between the matchup dashboard and the existing ranked replay briefing. It combines a bounded recorded-role review, a source-backed unit book, conditional counter-compositions and three transition questions. This is post-match only; the existing dashboard jump still goes directly to the older evidence briefing.
+Coach includes **Read the army’s jobs—not just its unit names** inside **Matchup & unit reference book**, below the [replay-first coaching home](replay-coach-home.md). It combines a bounded recorded-role review, a source-backed unit book, conditional counter-compositions and three transition questions. This is post-match only; the home and reference dashboard jumps still go directly to the older evidence briefing.
 
 ## What is covered
 

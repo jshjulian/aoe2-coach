@@ -1,0 +1,30 @@
+.replay-coach-home{margin:1.25rem 0;color:var(--ink)}
+.replay-home-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.replay-home-heading h2{font-family:var(--font-display),Georgia,serif;font-size:clamp(1.5rem,2.2vw,2rem);line-height:1.2;margin:.4rem 0}
+.replay-home-eyebrow{font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:var(--accent)}
+.replay-home-subtitle,.replay-home-recorded{font-size:.8rem;line-height:1.6;color:var(--muted)}
+.replay-home-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:1rem;align-items:start}
+.replay-home-card{min-width:0;border:1px solid var(--border-subtle);border-radius:24px;padding:1.2rem;background:var(--panel);box-shadow:var(--studio-shadow);overflow-wrap:anywhere}
+.replay-home-card h3{font-size:1.25rem;font-weight:750;line-height:1.3;margin:.5rem 0 .8rem}
+.replay-home-moments{border-top:3px solid var(--accent);background:linear-gradient(125deg,var(--studio-glow),transparent 80%),var(--panel)}
+.replay-home-moment{padding:1rem 0;border-top:1px solid var(--border-subtle)}
+.replay-home-moment:last-child{padding-bottom:0}
+.replay-home-moment-heading{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.45rem}
+.replay-home-moment h4{font-size:1rem;line-height:1.4;font-weight:750}
+.replay-home-clock{flex-shrink:0;font-size:.8rem;font-weight:750;color:var(--accent);border:1px solid var(--border-subtle);border-radius:9px;padding:.35rem .5rem;background:var(--panel)}
+.replay-home-action{font-size:.875rem;line-height:1.6;margin-top:.5rem}
+.replay-home-source-list{font-size:.72rem;color:var(--muted);margin-top:.7rem}
+.replay-home-source-list summary{cursor:pointer;font-weight:650}
+.replay-home-source-list div{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;margin-top:.75rem}
+.replay-home-source-list button{text-align:left;color:var(--ink);text-decoration:underline;text-underline-offset:3px;line-height:1.6}
+.replay-home-secondary{font-size:.75rem;line-height:1.5;font-weight:650;flex-shrink:0;border:1px solid var(--border-subtle);border-radius:12px;padding:.55rem .7rem;color:var(--ink);background:var(--panel)}
+.replay-home-stage{font-size:.75rem;font-weight:700;color:var(--accent);margin-bottom:.45rem}
+.replay-home-small-heading{font-size:.85rem;font-weight:750;margin:1rem 0 .45rem}
+.replay-home-plan ul{list-style:disc;padding-left:1rem;font-size:.875rem;line-height:1.6}
+.replay-home-plan li+li{margin-top:.5rem}
+.replay-home-watch{border-top:1px solid var(--border-subtle);margin-top:1rem;padding-top:1rem;font-size:.8rem;line-height:1.6}
+.replay-home-evidence{font-size:.73rem;color:var(--muted);margin-top:1rem;line-height:1.6}
+.replay-home-evidence summary{cursor:pointer;font-weight:650}.replay-home-evidence p{margin-top:.6rem;max-width:100ch}
+.replay-home-clock:focus-visible,.replay-home-secondary:focus-visible,.replay-home-source-list button:focus-visible,.replay-home-evidence summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-width:1050px){.replay-home-grid{grid-template-columns:minmax(0,1fr)}.replay-home-heading{align-items:flex-start;flex-wrap:wrap}}
+@media(max-width:480px){.replay-home-card{padding:1rem;border-radius:20px}.replay-home-moment-heading{gap:.5rem}.replay-home-moment h4{font-size:.95rem}.replay-home-heading h2{font-size:1.55rem}}

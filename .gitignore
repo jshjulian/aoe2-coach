@@ -39,6 +39,7 @@ coverage/
 !/docs/military-commitment.md
 !/docs/matchup-dashboard.md
 !/docs/army-composition.md
+!/docs/replay-coach-home.md
 /test_*.py
 !/test_military_commitment.py
 !/test_military_commitment_api.py
@@ -57,6 +58,8 @@ coverage/
 !/tools/run_matchup_dashboard_browser_smoke.py
 !/tools/browser_army_composition_smoke.mjs
 !/tools/run_army_composition_browser_smoke.py
+!/tools/browser_replay_coach_home_smoke.mjs
+!/tools/run_replay_coach_home_browser_smoke.py
 /tools/build_review_package.py
 /tools/review_reasoning_cases.py
 /viewer/LOCAL-INTEGRATION.md
